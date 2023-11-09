@@ -1,0 +1,35 @@
+issuer: https://oidc.c4-soft.com/auth/realms/spring-addons
+client-id: spring-addons-bff
+client-secret: change-me
+spa-uri: http://localhost:4200/
+
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          default:
+            issuer-uri: ${issuer}
+            user-name-attribute: preferred_username
+            
+        registration:
+          login:
+            provider: default
+            authorization-grant-type: authorization_code
+            client-id: ${client-id}
+            client-secret: ${client-secret}
+            redirect-uri: http://localhost:8080/login/oauth2/code/login
+            scope: 
+              - openid
+              - offline_access
+  cloud:
+    gateway:
+      default-filters:
+      - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin Access-Control-Request-Headers
+      - SaveSession
+
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE
